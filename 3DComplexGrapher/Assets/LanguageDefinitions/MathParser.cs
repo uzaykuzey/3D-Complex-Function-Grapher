@@ -105,11 +105,11 @@ public partial class MathParser : Parser {
 		public Add_opContext add_op() {
 			return GetRuleContext<Add_opContext>(0);
 		}
-		public Mult_exprContext mult_expr() {
-			return GetRuleContext<Mult_exprContext>(0);
-		}
 		public Add_exprContext add_expr() {
 			return GetRuleContext<Add_exprContext>(0);
+		}
+		public Mult_exprContext mult_expr() {
+			return GetRuleContext<Mult_exprContext>(0);
 		}
 		public Add_exprContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -154,7 +154,7 @@ public partial class MathParser : Parser {
 			case MINUS:
 				{
 				State = 25; add_op();
-				State = 26; mult_expr(0);
+				State = 26; add_expr(2);
 				}
 				break;
 			case E:
@@ -1099,7 +1099,7 @@ public partial class MathParser : Parser {
 		'\x2', '\x2', '\x2', '\x16', '\x80', '\x3', '\x2', '\x2', '\x2', '\x18', 
 		'\x82', '\x3', '\x2', '\x2', '\x2', '\x1A', '\x1B', '\b', '\x2', '\x1', 
 		'\x2', '\x1B', '\x1C', '\x5', '\f', '\a', '\x2', '\x1C', '\x1D', '\x5', 
-		'\x4', '\x3', '\x2', '\x1D', ' ', '\x3', '\x2', '\x2', '\x2', '\x1E', 
+		'\x2', '\x2', '\x4', '\x1D', ' ', '\x3', '\x2', '\x2', '\x2', '\x1E', 
 		' ', '\x5', '\x4', '\x3', '\x2', '\x1F', '\x1A', '\x3', '\x2', '\x2', 
 		'\x2', '\x1F', '\x1E', '\x3', '\x2', '\x2', '\x2', ' ', '\'', '\x3', '\x2', 
 		'\x2', '\x2', '!', '\"', '\f', '\x5', '\x2', '\x2', '\"', '#', '\x5', 

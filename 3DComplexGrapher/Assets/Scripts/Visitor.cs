@@ -18,9 +18,9 @@ namespace ComplexParser
         public static readonly double phi = (1 + Math.Sqrt(5)) / 2;
         public override ComplexFunction VisitAdd_expr(MathParser.Add_exprContext context)
         {
-            if (context.add_op() != null && context.add_expr() == null)
+            if (context.add_op() != null && context.mult_expr() == null)
             {
-                ComplexFunction arg = Visit(context.mult_expr());
+                ComplexFunction arg = Visit(context.add_expr());
                 switch (context.add_op().GetText())
                 {
                     case "+":

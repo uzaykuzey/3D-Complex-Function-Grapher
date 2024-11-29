@@ -120,11 +120,6 @@ public class Cube : MonoBehaviour
             return;
         }
 
-        if(Coordinates==0)
-        {
-            int k = 0;
-        }
-
         ComplexNumber value = function.Calculate(AdjustedCoordinates);
         if(value.Abs()>200)
         {
@@ -169,7 +164,7 @@ public class Cube : MonoBehaviour
 
         double hue = argz >= 0 ? argz / 2 : argz / 2 + 1;
 
-        meshRenderer.material.color = /*value==0 ? new Color(0.5f, 0.5f, 0.5f) : */Color.HSVToRGB((float) hue, 1, 1);
+        meshRenderer.material.color = /*value==0 ? new Color(0.5f, 0.5f, 0.5f) : */ Color.HSVToRGB((float) hue, 1, 1);
 
 
     }
