@@ -1,10 +1,7 @@
-﻿using Antlr4.Runtime.Atn;
-using ComplexParser;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-public struct ComplexNumber
+public readonly struct ComplexNumber
 {
     public static readonly ComplexNumber I = new ComplexNumber(0,1);
     public readonly double real, imaginary;
