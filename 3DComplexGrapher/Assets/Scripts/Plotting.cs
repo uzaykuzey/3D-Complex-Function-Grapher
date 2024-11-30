@@ -7,34 +7,60 @@ using UnityEngine.UI;
 
 public class Plotting : MonoBehaviour
 {
-    [SerializeField] private Button button;
+    [SerializeField] private Button plottingButton;
+    [SerializeField] private Button errorScreenButton;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private GameObject originalCube;
     [SerializeField] private int sqrtCubeCount;
     [SerializeField] private double adjustmentAmount;
-    [SerializeField] private GameObject topOfText;
+    [SerializeField] private GameObject invalidExpression;
 
     public static Plotting Instance { get; private set; }
+    public bool ErrorScreen
+    {
+        get
+        {
+            return invalidExpression.GetComponent<RawImage>().enabled;
+        }
+
+        set
+        {
+            invalidExpression.GetComponent<RawImage>().enabled=value;
+            foreach(TextMeshProUGUI o in invalidExpression.GetComponentsInChildren<TextMeshProUGUI>())
+            {
+                o.enabled = value;
+            }
+            foreach (Image o in invalidExpression.GetComponentsInChildren<Image>())
+            {
+                o.enabled = value;
+            }
+        }
+    }
 
     private Cube[] cubes;
     private ComplexFunction function;
-    private List<GameObject> additionalCubes;
 
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
-        additionalCubes = new();
-        button.onClick.AddListener(() =>
+        ErrorScreen = false;
+        plottingButton.onClick.AddListener(() =>
         {
             ParseFunction(inputField.text);
+        });
+
+        errorScreenButton.onClick.AddListener(() =>
+        {
+            print("hello");
+            ErrorScreen = false;
         });
 
         cubes = new Cube[sqrtCubeCount*sqrtCubeCount];
 
         foreach(GameObject o in GameObject.FindGameObjectsWithTag("Axis"))
         {
-            o.GetComponent<MeshRenderer>().material.color = UnityEngine.Color.black;
+            o.GetComponent<MeshRenderer>().material.color = Color.black;
         }
 
         for(int i=-sqrtCubeCount/2; i < sqrtCubeCount/2; i++)
@@ -55,7 +81,14 @@ public class Plotting : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Return)) 
         {
-            ParseFunction(inputField.text);
+            if(ErrorScreen)
+            {
+                ErrorScreen = false;
+            }
+            else
+            {
+                ParseFunction(inputField.text);
+            }
         }
     }
 
@@ -66,12 +99,10 @@ public class Plotting : MonoBehaviour
         var tokens = new CommonTokenStream(lexer);
         var parser = new MathParser(tokens);
 
+        parser.RemoveErrorListeners();
+        parser.AddErrorListener(new ThrowingErrorListener());
+
         IterativeVariable.iterativeValues.Clear();
-        foreach(GameObject o in additionalCubes)
-        {
-            Destroy(o);
-        }
-        additionalCubes.Clear();
 
         try
         {
@@ -81,9 +112,9 @@ public class Plotting : MonoBehaviour
 
             PlotAll();
         }
-        catch (Exception ex)
+        catch
         {
-            print("Parse error: " + ex.Message);
+            ErrorScreen = true;
         }
     }
 
@@ -99,4 +130,5 @@ public class Plotting : MonoBehaviour
     {
         return number / adjustmentAmount;
     }
+
 }

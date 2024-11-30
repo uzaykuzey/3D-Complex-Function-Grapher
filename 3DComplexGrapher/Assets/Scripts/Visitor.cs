@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Antlr4.Runtime;
+using System;
+using System.IO;
+using TMPro;
 
 public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
 {
@@ -8,9 +11,9 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
     public static readonly double phi = (1 + Math.Sqrt(5)) / 2;
     public override ComplexFunction VisitAdd_expr(MathParser.Add_exprContext context)
     {
-        if (context.add_op() != null && context.mult_expr() == null)
+        if (context.add_op() != null && context.add_expr() == null)
         {
-            ComplexFunction arg = Visit(context.add_expr());
+            ComplexFunction arg = Visit(context.mult_expr());
             switch (context.add_op().GetText())
             {
                 case "+":
@@ -245,5 +248,13 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
                 return new IterativeVariable(context.GetText()[1]);
         }
         throw new Exception("Unknown Variable");
+    }
+}
+
+public class ThrowingErrorListener : BaseErrorListener
+{
+    public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
+    {
+        throw new Exception($"Syntax error at line {line}, position {charPositionInLine}: {msg}");
     }
 }

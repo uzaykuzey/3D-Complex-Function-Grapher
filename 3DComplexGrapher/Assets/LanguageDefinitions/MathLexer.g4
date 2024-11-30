@@ -51,7 +51,6 @@ PLUS: '+';
 MINUS: '-';
 TIMES: '*';
 DIVIDE: '/';
-MOD: '%';
 ABSSYMBOL: '|';
 EXPSYMBOL: '^' | '**';
 

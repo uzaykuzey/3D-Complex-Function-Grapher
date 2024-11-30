@@ -3,7 +3,7 @@ parser grammar MathParser;
 options { tokenVocab=MathLexer; }
 
 
-add_expr: add_expr add_op mult_expr | add_op add_expr | mult_expr ;
+add_expr: add_expr add_op mult_expr | add_op mult_expr | mult_expr ;
 mult_expr: mult_expr mult_op exp_expr | mult_expr exp_expr | exp_expr;
 exp_expr: final_expr exp_op exp_expr | final_expr;
 final_expr: constant 
@@ -19,7 +19,7 @@ final_expr: constant
            
 exp_op: EXPSYMBOL;
 add_op: PLUS | MINUS;
-mult_op: TIMES | DIVIDE | MOD;
+mult_op: TIMES | DIVIDE;
 
 int_declaration_for_iteration: add_op INTEGER | INTEGER;
 

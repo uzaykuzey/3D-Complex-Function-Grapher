@@ -41,8 +41,8 @@ public partial class MathParser : Parser {
 		ACOT=21, SI=22, LN=23, LOG=24, ABS=25, RE=26, IM=27, GAMMA=28, ZETA=29, 
 		SIGN=30, W=31, ERF=32, BETA=33, PRODUCT=34, SUM=35, I=36, APERY=37, EULERMASCHERONI=38, 
 		INTEGER=39, RATIONAL=40, ITERATIVE_VARIABLE=41, LP=42, RP=43, COMMA=44, 
-		PLUS=45, MINUS=46, TIMES=47, DIVIDE=48, MOD=49, ABSSYMBOL=50, EXPSYMBOL=51, 
-		WHITESPACE=52, NEWLINE=53;
+		PLUS=45, MINUS=46, TIMES=47, DIVIDE=48, ABSSYMBOL=49, EXPSYMBOL=50, WHITESPACE=51, 
+		NEWLINE=52;
 	public const int
 		RULE_add_expr = 0, RULE_mult_expr = 1, RULE_exp_expr = 2, RULE_final_expr = 3, 
 		RULE_exp_op = 4, RULE_add_op = 5, RULE_mult_op = 6, RULE_int_declaration_for_iteration = 7, 
@@ -59,8 +59,7 @@ public partial class MathParser : Parser {
 		"'arcsin'", "'arccos'", "'arctan'", "'arccot'", "'si'", "'ln'", "'log'", 
 		"'abs'", null, null, "'gamma'", "'zeta'", "'sign'", null, "'erf'", "'beta'", 
 		"'product'", "'sum'", "'i'", "'apery'", "'eulerm'", null, null, null, 
-		"'('", "')'", "','", "'+'", "'-'", "'*'", "'/'", "'%'", "'|'", null, null, 
-		"'\n'"
+		"'('", "')'", "','", "'+'", "'-'", "'*'", "'/'", "'|'", null, null, "'\n'"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, "E", "PI", "PHI", "X", "Y", "Z", "EXP", "POW", "SQRT", "CBRT", "SIN", 
@@ -68,7 +67,7 @@ public partial class MathParser : Parser {
 		"SI", "LN", "LOG", "ABS", "RE", "IM", "GAMMA", "ZETA", "SIGN", "W", "ERF", 
 		"BETA", "PRODUCT", "SUM", "I", "APERY", "EULERMASCHERONI", "INTEGER", 
 		"RATIONAL", "ITERATIVE_VARIABLE", "LP", "RP", "COMMA", "PLUS", "MINUS", 
-		"TIMES", "DIVIDE", "MOD", "ABSSYMBOL", "EXPSYMBOL", "WHITESPACE", "NEWLINE"
+		"TIMES", "DIVIDE", "ABSSYMBOL", "EXPSYMBOL", "WHITESPACE", "NEWLINE"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -105,11 +104,11 @@ public partial class MathParser : Parser {
 		public Add_opContext add_op() {
 			return GetRuleContext<Add_opContext>(0);
 		}
-		public Add_exprContext add_expr() {
-			return GetRuleContext<Add_exprContext>(0);
-		}
 		public Mult_exprContext mult_expr() {
 			return GetRuleContext<Mult_exprContext>(0);
+		}
+		public Add_exprContext add_expr() {
+			return GetRuleContext<Add_exprContext>(0);
 		}
 		public Add_exprContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -154,7 +153,7 @@ public partial class MathParser : Parser {
 			case MINUS:
 				{
 				State = 25; add_op();
-				State = 26; add_expr(2);
+				State = 26; mult_expr(0);
 				}
 				break;
 			case E:
@@ -682,7 +681,6 @@ public partial class MathParser : Parser {
 	public partial class Mult_opContext : ParserRuleContext {
 		public ITerminalNode TIMES() { return GetToken(MathParser.TIMES, 0); }
 		public ITerminalNode DIVIDE() { return GetToken(MathParser.DIVIDE, 0); }
-		public ITerminalNode MOD() { return GetToken(MathParser.MOD, 0); }
 		public Mult_opContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -713,7 +711,7 @@ public partial class MathParser : Parser {
 			{
 			State = 114;
 			_la = TokenStream.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TIMES) | (1L << DIVIDE) | (1L << MOD))) != 0)) ) {
+			if ( !(_la==TIMES || _la==DIVIDE) ) {
 			ErrorHandler.RecoverInline(this);
 			}
 			else {
@@ -1060,7 +1058,7 @@ public partial class MathParser : Parser {
 
 	private static char[] _serializedATN = {
 		'\x3', '\x608B', '\xA72A', '\x8133', '\xB9ED', '\x417C', '\x3BE7', '\x7786', 
-		'\x5964', '\x3', '\x37', '\x85', '\x4', '\x2', '\t', '\x2', '\x4', '\x3', 
+		'\x5964', '\x3', '\x36', '\x85', '\x4', '\x2', '\t', '\x2', '\x4', '\x3', 
 		'\t', '\x3', '\x4', '\x4', '\t', '\x4', '\x4', '\x5', '\t', '\x5', '\x4', 
 		'\x6', '\t', '\x6', '\x4', '\a', '\t', '\a', '\x4', '\b', '\t', '\b', 
 		'\x4', '\t', '\t', '\t', '\x4', '\n', '\t', '\n', '\x4', '\v', '\t', '\v', 
@@ -1088,7 +1086,7 @@ public partial class MathParser : Parser {
 		'\f', '\x3', '\f', '\x3', '\r', '\x3', '\r', '\x3', '\r', '\x2', '\x4', 
 		'\x2', '\x4', '\xE', '\x2', '\x4', '\x6', '\b', '\n', '\f', '\xE', '\x10', 
 		'\x12', '\x14', '\x16', '\x18', '\x2', '\b', '\x3', '\x2', '/', '\x30', 
-		'\x3', '\x2', '\x31', '\x33', '\x5', '\x2', '\t', '\t', '\v', '\x19', 
+		'\x3', '\x2', '\x31', '\x32', '\x5', '\x2', '\t', '\t', '\v', '\x19', 
 		'\x1B', '\"', '\x4', '\x2', '\x3', '\x5', '&', '*', '\x4', '\x2', '\x6', 
 		'\b', '+', '+', '\x3', '\x2', '$', '%', '\x2', '\x87', '\x2', '\x1F', 
 		'\x3', '\x2', '\x2', '\x2', '\x4', '*', '\x3', '\x2', '\x2', '\x2', '\x6', 
@@ -1099,7 +1097,7 @@ public partial class MathParser : Parser {
 		'\x2', '\x2', '\x2', '\x16', '\x80', '\x3', '\x2', '\x2', '\x2', '\x18', 
 		'\x82', '\x3', '\x2', '\x2', '\x2', '\x1A', '\x1B', '\b', '\x2', '\x1', 
 		'\x2', '\x1B', '\x1C', '\x5', '\f', '\a', '\x2', '\x1C', '\x1D', '\x5', 
-		'\x2', '\x2', '\x4', '\x1D', ' ', '\x3', '\x2', '\x2', '\x2', '\x1E', 
+		'\x4', '\x3', '\x2', '\x1D', ' ', '\x3', '\x2', '\x2', '\x2', '\x1E', 
 		' ', '\x5', '\x4', '\x3', '\x2', '\x1F', '\x1A', '\x3', '\x2', '\x2', 
 		'\x2', '\x1F', '\x1E', '\x3', '\x2', '\x2', '\x2', ' ', '\'', '\x3', '\x2', 
 		'\x2', '\x2', '!', '\"', '\f', '\x5', '\x2', '\x2', '\"', '#', '\x5', 
@@ -1141,8 +1139,8 @@ public partial class MathParser : Parser {
 		'`', '\x61', '\a', '.', '\x2', '\x2', '\x61', '\x62', '\x5', '\x10', '\t', 
 		'\x2', '\x62', '\x63', '\a', '.', '\x2', '\x2', '\x63', '\x64', '\x5', 
 		'\x10', '\t', '\x2', '\x64', '\x65', '\a', '-', '\x2', '\x2', '\x65', 
-		'o', '\x3', '\x2', '\x2', '\x2', '\x66', 'g', '\a', '\x34', '\x2', '\x2', 
-		'g', 'h', '\x5', '\x2', '\x2', '\x2', 'h', 'i', '\a', '\x34', '\x2', '\x2', 
+		'o', '\x3', '\x2', '\x2', '\x2', '\x66', 'g', '\a', '\x33', '\x2', '\x2', 
+		'g', 'h', '\x5', '\x2', '\x2', '\x2', 'h', 'i', '\a', '\x33', '\x2', '\x2', 
 		'i', 'o', '\x3', '\x2', '\x2', '\x2', 'j', 'k', '\a', ',', '\x2', '\x2', 
 		'k', 'l', '\x5', '\x2', '\x2', '\x2', 'l', 'm', '\a', '-', '\x2', '\x2', 
 		'm', 'o', '\x3', '\x2', '\x2', '\x2', 'n', '?', '\x3', '\x2', '\x2', '\x2', 
@@ -1151,7 +1149,7 @@ public partial class MathParser : Parser {
 		'\x2', '\x2', 'n', 'R', '\x3', '\x2', '\x2', '\x2', 'n', 'Y', '\x3', '\x2', 
 		'\x2', '\x2', 'n', '[', '\x3', '\x2', '\x2', '\x2', 'n', '\x66', '\x3', 
 		'\x2', '\x2', '\x2', 'n', 'j', '\x3', '\x2', '\x2', '\x2', 'o', '\t', 
-		'\x3', '\x2', '\x2', '\x2', 'p', 'q', '\a', '\x35', '\x2', '\x2', 'q', 
+		'\x3', '\x2', '\x2', '\x2', 'p', 'q', '\a', '\x34', '\x2', '\x2', 'q', 
 		'\v', '\x3', '\x2', '\x2', '\x2', 'r', 's', '\t', '\x2', '\x2', '\x2', 
 		's', '\r', '\x3', '\x2', '\x2', '\x2', 't', 'u', '\t', '\x3', '\x2', '\x2', 
 		'u', '\xF', '\x3', '\x2', '\x2', '\x2', 'v', 'w', '\x5', '\f', '\a', '\x2', 
