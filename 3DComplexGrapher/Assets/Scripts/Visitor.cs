@@ -143,6 +143,12 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
                     return new LambertW(arg);
                 case "sign":
                     return new Sign(arg);
+                case "sinh":
+                    return new HyperbolicSine(arg);
+                case "cosh":
+                    return new HyperbolicCosine(arg);
+                case "tanh":
+                    return -ComplexNumber.I * (new Tangent(ComplexNumber.I * arg));
                 default:
                     throw new NotImplementedException($"Function '{context.function().GetText()}' is not implemented.");
             }

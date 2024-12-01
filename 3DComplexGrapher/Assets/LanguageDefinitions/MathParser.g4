@@ -25,7 +25,7 @@ int_declaration_for_iteration: add_op INTEGER | INTEGER;
 
 function: EXP | SQRT | CBRT | SIN | COS | TAN | COT | SEC | CSC 
          | ASIN | ACOS | ATAN | ACOT | LN | ABS | RE | IM 
-         | GAMMA | ZETA | W | ERF | ARG | SI | SIGN;
+         | GAMMA | ZETA | W | ERF | ARG | SI | SIGN | SINH | COSH | TANH;
 constant: INTEGER | RATIONAL | I | E | PI | PHI | APERY | EULERMASCHERONI;
 variable: X | Y | Z | ITERATIVE_VARIABLE;
 sum_or_product: SUM | PRODUCT;

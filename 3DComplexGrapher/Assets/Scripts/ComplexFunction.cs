@@ -16,6 +16,7 @@ public readonly struct ComplexNumber
         9.9843695780195716e-6,
         1.5056327351493116e-7
     };
+
     public readonly double Abs()
     {
         return Math.Sqrt(real*real + imaginary*imaginary);
@@ -29,10 +30,12 @@ public readonly struct ComplexNumber
         }
         return 2 * Math.Atan(imaginary / (real + Abs()));
     }
+
     public readonly ComplexNumber Conj()
     {
         return new ComplexNumber(real, -imaginary);
     }
+
     public ComplexNumber(double real, double imaginary)
     {
         this.real = real;
@@ -1097,3 +1100,46 @@ public class Sign : ComplexFunction
         return function.Defined(z);
     }
 }
+
+public class HyperbolicSine : ComplexFunction
+{
+    readonly ComplexFunction function;
+
+    public HyperbolicSine(ComplexFunction function)
+    {
+        this.function = function;
+    }
+
+    public override ComplexNumber Calculate(ComplexNumber z)
+    {
+        ComplexNumber value = ComplexNumber.Exp(function.Calculate(z));
+        return (value-1/value)/2;
+    }
+
+    public override bool Defined(ComplexNumber z)
+    {
+        return function.Defined(z);
+    }
+}
+
+public class HyperbolicCosine : ComplexFunction
+{
+    readonly ComplexFunction function;
+
+    public HyperbolicCosine(ComplexFunction function)
+    {
+        this.function = function;
+    }
+
+    public override ComplexNumber Calculate(ComplexNumber z)
+    {
+        ComplexNumber value = ComplexNumber.Exp(function.Calculate(z));
+        return (value + 1 / value) / 2;
+    }
+
+    public override bool Defined(ComplexNumber z)
+    {
+        return function.Defined(z);
+    }
+}
+
