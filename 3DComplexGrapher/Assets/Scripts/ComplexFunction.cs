@@ -686,46 +686,6 @@ public class Cotangent : ComplexFunction
     }
 }
 
-public class Secant : ComplexFunction
-{
-    readonly ComplexFunction function;
-
-    public Secant(ComplexFunction function)
-    {
-        this.function = function;
-    }
-
-    public override ComplexNumber Calculate(ComplexNumber z)
-    {
-        return 1 / ComplexNumber.Cos(function.Calculate(z));
-    }
-
-    public override bool Defined(ComplexNumber z)
-    {
-        return function.Defined(z) && ComplexNumber.Cos(function.Calculate(z)) != 0;
-    }
-}
-
-public class Cosecant : ComplexFunction
-{
-    readonly ComplexFunction function;
-
-    public Cosecant(ComplexFunction function)
-    {
-        this.function = function;
-    }
-
-    public override ComplexNumber Calculate(ComplexNumber z)
-    {
-        return 1 / ComplexNumber.Sin(function.Calculate(z));
-    }
-
-    public override bool Defined(ComplexNumber z)
-    {
-        return function.Defined(z) && ComplexNumber.Sin(function.Calculate(z)) != 0;
-    }
-}
-
 public class Exponential : ComplexFunction
 {
     readonly ComplexFunction function;
@@ -1100,46 +1060,3 @@ public class Sign : ComplexFunction
         return function.Defined(z);
     }
 }
-
-public class HyperbolicSine : ComplexFunction
-{
-    readonly ComplexFunction function;
-
-    public HyperbolicSine(ComplexFunction function)
-    {
-        this.function = function;
-    }
-
-    public override ComplexNumber Calculate(ComplexNumber z)
-    {
-        ComplexNumber value = ComplexNumber.Exp(function.Calculate(z));
-        return (value-1/value)/2;
-    }
-
-    public override bool Defined(ComplexNumber z)
-    {
-        return function.Defined(z);
-    }
-}
-
-public class HyperbolicCosine : ComplexFunction
-{
-    readonly ComplexFunction function;
-
-    public HyperbolicCosine(ComplexFunction function)
-    {
-        this.function = function;
-    }
-
-    public override ComplexNumber Calculate(ComplexNumber z)
-    {
-        ComplexNumber value = ComplexNumber.Exp(function.Calculate(z));
-        return (value + 1 / value) / 2;
-    }
-
-    public override bool Defined(ComplexNumber z)
-    {
-        return function.Defined(z);
-    }
-}
-

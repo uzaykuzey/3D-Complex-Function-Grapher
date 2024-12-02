@@ -71,7 +71,6 @@ NEWLINE=55
 'tanh'=16
 'cot'=17
 'sec'=18
-'csc'=19
 'arg'=20
 'arcsin'=21
 'arccos'=22

@@ -114,11 +114,11 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
                 case "cot":
                     return new Cotangent(arg);
                 case "sec":
-                    return new Secant(arg);
+                    return 1 / new Cosine(arg);
                 case "csc":
-                    return new Cosine(arg);
+                    return 1 / new Sine(arg);
                 case "cosec":
-                    return new Cosine(arg);
+                    return 1 / new Sine(arg);
                 case "arcsin":
                     return new Arcsine(arg);
                 case "arccos":
@@ -144,9 +144,9 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
                 case "sign":
                     return new Sign(arg);
                 case "sinh":
-                    return new HyperbolicSine(arg);
+                    return -ComplexNumber.I * new Sine(ComplexNumber.I * arg);
                 case "cosh":
-                    return new HyperbolicCosine(arg);
+                    return new Cosine(ComplexNumber.I * arg);
                 case "tanh":
                     return -ComplexNumber.I * (new Tangent(ComplexNumber.I * arg));
                 default:

@@ -56,7 +56,7 @@ public partial class MathParser : Parser {
 	private static readonly string[] _LiteralNames = {
 		null, "'e'", "'pi'", "'phi'", "'x'", "'y'", "'z'", "'exp'", "'pow'", "'sqrt'", 
 		"'cbrt'", "'sin'", "'cos'", "'tan'", "'sinh'", "'cosh'", "'tanh'", "'cot'", 
-		"'sec'", "'csc'", "'arg'", "'arcsin'", "'arccos'", "'arctan'", "'arccot'", 
+		"'sec'", null, "'arg'", "'arcsin'", "'arccos'", "'arctan'", "'arccot'", 
 		"'si'", "'ln'", "'log'", "'abs'", null, null, "'gamma'", "'zeta'", "'sign'", 
 		null, "'erf'", "'beta'", "'product'", "'sum'", "'i'", "'apery'", "'eulerm'", 
 		null, null, null, "'('", "')'", "','", "'+'", "'-'", "'*'", "'/'", "'|'", 

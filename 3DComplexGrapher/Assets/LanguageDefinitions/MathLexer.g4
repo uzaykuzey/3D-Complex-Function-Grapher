@@ -20,7 +20,7 @@ COSH: 'cosh';
 TANH: 'tanh';
 COT: 'cot';
 SEC: 'sec';
-CSC: 'csc';
+CSC: 'csc' | 'cosec';
 ARG: 'arg';
 ASIN: 'arcsin';
 ACOS: 'arccos';
