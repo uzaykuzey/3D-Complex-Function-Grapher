@@ -1,7 +1,6 @@
 ﻿using Antlr4.Runtime;
 using System;
 using System.IO;
-using TMPro;
 
 public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
 {

@@ -23,29 +23,29 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        
+        rho += -(Plotting.Instance.function == null ? 750: 100) * Input.mouseScrollDelta.y * Time.deltaTime;
     }
 
 
     private void FixedUpdate()
     {
-        Vector3 currentMouseWorldPosition = Input.mousePosition;
-        mouseWorldVelocity = (currentMouseWorldPosition - lastMouseWorldPosition);
-        lastMouseWorldPosition = currentMouseWorldPosition;
 
         if (Input.GetMouseButton(0))
         {
-            phi += mouseWorldVelocity.y * Mathf.PI / 180;
-            theta -= mouseWorldVelocity.x * Mathf.PI / 180;
+            float f = Mathf.PI * Mathf.Sqrt(rho / 120) / (Plotting.Instance.function==null ? 10: 30);
+            phi += Input.GetAxis("Mouse Y") * f;
+            theta -= Input.GetAxis("Mouse X") * f;
         }
         else if(rotate)
         {
             theta += 0.01f;
         }
 
-        phi = Mathf.Min(Mathf.PI-0.01f, phi);
-        phi = Mathf.Max(0.01f, phi);
+        rho += -20 * Input.mouseScrollDelta.y;
+        rho = Mathf.Clamp(rho, 60f, 180f);
+
+        phi = Mathf.Clamp(phi, 0.01f, Mathf.PI - 0.01f);
+
         if(theta<0)
         {
             theta += 2*Mathf.PI;
@@ -54,6 +54,7 @@ public class CameraMovement : MonoBehaviour
         {
             theta-= 2 * Mathf.PI;
         }
+
         main.transform.position = new Vector3(rho * Mathf.Sin(phi) * Mathf.Cos(theta),
                                               rho * Mathf.Cos(phi), 
                                               rho * Mathf.Sin(phi) * Mathf.Sin(theta)

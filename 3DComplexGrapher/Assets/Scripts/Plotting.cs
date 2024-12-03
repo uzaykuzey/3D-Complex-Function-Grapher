@@ -1,6 +1,4 @@
 using Antlr4.Runtime;
-using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,7 +36,7 @@ public class Plotting : MonoBehaviour
     }
 
     private Cube[] cubes;
-    private ComplexFunction function;
+    public ComplexFunction function;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +50,6 @@ public class Plotting : MonoBehaviour
 
         errorScreenButton.onClick.AddListener(() =>
         {
-            print("hello");
             ErrorScreen = false;
         });
 
@@ -60,7 +57,10 @@ public class Plotting : MonoBehaviour
 
         foreach(GameObject o in GameObject.FindGameObjectsWithTag("Axis"))
         {
-            o.GetComponent<MeshRenderer>().material.color = Color.black;
+            if(o.TryGetComponent(out MeshRenderer renderer))
+            {
+                renderer.material.color = Color.black;
+            }
         }
 
         for(int i=-sqrtCubeCount/2; i < sqrtCubeCount/2; i++)
