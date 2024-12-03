@@ -41,9 +41,7 @@ public class CameraMovement : MonoBehaviour
             theta += 0.01f;
         }
 
-        rho += -20 * Input.mouseScrollDelta.y;
-        rho = Mathf.Clamp(rho, 60f, 180f);
-
+        rho = Mathf.Clamp(rho, 50f, 180f);
         phi = Mathf.Clamp(phi, 0.01f, Mathf.PI - 0.01f);
 
         if(theta<0)
