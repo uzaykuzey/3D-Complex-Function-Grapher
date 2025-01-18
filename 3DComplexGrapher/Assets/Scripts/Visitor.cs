@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using System;
 using System.IO;
+using UnityEngine;
 
 public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
 {
@@ -10,6 +11,10 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
     public static readonly double phi = (1 + Math.Sqrt(5)) / 2;
     public override ComplexFunction VisitAdd_expr(MathParser.Add_exprContext context)
     {
+        if(Plotting.firstInputLength==-1)
+        {
+            Plotting.firstInputLength = context.GetText().Length;
+        }
         if (context.add_op() != null && context.add_expr() == null)
         {
             ComplexFunction arg = Visit(context.mult_expr());

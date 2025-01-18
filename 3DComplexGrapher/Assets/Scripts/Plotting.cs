@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,6 @@ using UnityEngine.UI;
 public class Plotting : MonoBehaviour
 {
     [SerializeField] private Button plottingButton;
-    [SerializeField] private Button errorScreenButton;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private GameObject originalCube;
     [SerializeField] private int sqrtCubeCount;
@@ -14,6 +14,8 @@ public class Plotting : MonoBehaviour
     [SerializeField] private GameObject invalidExpression;
 
     public static Plotting Instance { get; private set; }
+
+    public static int firstInputLength;
     public bool ErrorScreen
     {
         get
@@ -32,7 +34,17 @@ public class Plotting : MonoBehaviour
             {
                 o.enabled = value;
             }
+            CancelInvoke(nameof(CloseError));
+            if (value)
+            {
+                Invoke(nameof(CloseError), 2);
+            }
         }
+    }
+
+    public void CloseError()
+    {
+        ErrorScreen=false;
     }
 
     private Cube[] cubes;
@@ -46,11 +58,6 @@ public class Plotting : MonoBehaviour
         plottingButton.onClick.AddListener(() =>
         {
             ParseFunction(inputField.text);
-        });
-
-        errorScreenButton.onClick.AddListener(() =>
-        {
-            ErrorScreen = false;
         });
 
         cubes = new Cube[sqrtCubeCount*sqrtCubeCount];
@@ -94,7 +101,8 @@ public class Plotting : MonoBehaviour
 
     void ParseFunction(string input)
     {
-        input = input.ToLower();
+        input = Regex.Replace(input.ToLower().Trim(), @"\s+", " ");
+        firstInputLength=-1;
         var lexer = new MathLexer(new AntlrInputStream(input));
         var tokens = new CommonTokenStream(lexer);
         var parser = new MathParser(tokens);
@@ -109,13 +117,20 @@ public class Plotting : MonoBehaviour
             var tree = parser.add_expr();
             FunctionBuilderVisitor visitor = new FunctionBuilderVisitor();
             function = 5 * visitor.Visit(tree);
-
-            PlotAll();
         }
         catch
         {
             ErrorScreen = true;
+            return;
         }
+
+        if(firstInputLength!=input.Replace(" ", "").Length)
+        {
+            ErrorScreen = true;
+            return;
+        }
+
+        PlotAll();
     }
 
     void PlotAll()
