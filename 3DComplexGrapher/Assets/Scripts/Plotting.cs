@@ -1,4 +1,4 @@
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -55,9 +55,24 @@ public class Plotting : MonoBehaviour
     {
         Instance = this;
         ErrorScreen = false;
+        inputField.textComponent.richText = false;
+        inputField.onValueChanged.AddListener((text) =>
+        {
+            inputField.text = Regex.Replace(text.ToLower(), @"\s+|\$w|pow|w", match =>
+            {
+                switch (match.Value)
+                {
+                    case "pow": return "pow";
+                    case "$w": return "$w";
+                    case "w": return "W";
+                    default: return " ";
+                }
+            });
+        });
+
         plottingButton.onClick.AddListener(() =>
         {
-            ParseFunction(inputField.text);
+            Plot(inputField.text);
         });
 
         cubes = new Cube[sqrtCubeCount*sqrtCubeCount];
@@ -86,7 +101,7 @@ public class Plotting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return)) 
+        if(UnityEngine.Input.GetKeyDown(KeyCode.Return)) 
         {
             if(ErrorScreen)
             {
@@ -94,15 +109,16 @@ public class Plotting : MonoBehaviour
             }
             else
             {
-                ParseFunction(inputField.text);
+                Plot(inputField.text);
             }
         }
     }
 
-    void ParseFunction(string input)
+    public void Plot(string input)
     {
         input = Regex.Replace(input.ToLower().Trim(), @"\s+", " ");
         firstInputLength=-1;
+        inputField.text = input;
         var lexer = new MathLexer(new AntlrInputStream(input));
         var tokens = new CommonTokenStream(lexer);
         var parser = new MathParser(tokens);
