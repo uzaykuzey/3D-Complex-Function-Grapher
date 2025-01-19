@@ -153,6 +153,8 @@ public class FunctionBuilderVisitor : MathParserBaseVisitor<ComplexFunction>
                     return new Cosine(ComplexNumber.I * arg);
                 case "tanh":
                     return -ComplexNumber.I * (new Tangent(ComplexNumber.I * arg));
+                case "erf":
+                    return new Erf(arg);
                 default:
                     throw new NotImplementedException($"Function '{context.function().GetText()}' is not implemented.");
             }

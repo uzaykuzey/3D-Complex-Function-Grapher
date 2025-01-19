@@ -53,14 +53,28 @@ public class HelpControl : MonoBehaviour
         foreach(var o in contents)
         {
             float y = o.transform.localPosition.y;
-            if (y < 0)
+            if (y < -1)
             {
-                print("here");
                 o.transform.localPosition = o.transform.localPosition - new Vector3(0, y, 0);
             }
-            
+            if(y>680)
+            {
+                o.transform.localPosition = o.transform.localPosition - new Vector3(0, y - 640, 0);
+            }
         }
         
+    }
+
+    public bool HasOpenScreen()
+    {
+        foreach(var pair in dict)
+        {
+            if(pair.Second!=null && pair.Second.activeSelf)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -6,17 +6,16 @@ public class CameraMovement : MonoBehaviour
     private float rho;
     private float theta;
     private float phi;
-    private Vector3 lastMouseWorldPosition;
-    private Vector3 mouseWorldVelocity;
     private bool rotate;
+    private HelpControl helpControl;
     // Start is called before the first frame update
     void Start()
     {
+        helpControl=GetComponent<HelpControl>();
         main = Camera.main;
         rho = main.transform.position.magnitude;
         phi = Mathf.PI / 2;
         theta = -Mathf.PI/2;
-        lastMouseWorldPosition = Input.mousePosition;
         rotate = false;
     }
 
@@ -29,6 +28,10 @@ public class CameraMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(helpControl.HasOpenScreen())
+        {
+            return;
+        }
 
         if (Input.GetMouseButton(0))
         {

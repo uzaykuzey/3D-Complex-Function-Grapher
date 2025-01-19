@@ -255,29 +255,47 @@ public readonly struct ComplexNumber
 
     public static ComplexNumber LambertW(ComplexNumber z)
     {
-        ComplexNumber w = z.Abs() > 1 ? Ln(z) : z; // Reasonable initial guess
+        ComplexNumber w = z.Abs() > 1 ? Ln(z) : z;
 
         for (int i = 0; i < 1000; i++)
         {
-            // Compute f(w), f'(w), and f''(w)
             ComplexNumber ew = Exp(w);         // e^w
             ComplexNumber f = w * ew - z;     // f(w) = w * e^w - z
             ComplexNumber fp = ew * (1 + w);  // f'(w) = e^w * (1 + w)
             ComplexNumber fpp = ew * (2 + w); // f''(w) = e^w * (2 + w)
 
-            // Halley's method update
             ComplexNumber denominator = fp - f * fpp / (2 * fp);
             ComplexNumber delta = f / denominator;
             w -= delta;
 
-            // Convergence check
             if (delta.Abs() < 0.01)
                 return w;
         }
 
-        // If the method didn't converge, throw an exception
         return w;
 
+    }
+
+    public static ComplexNumber sqrtPi = Pow(Math.PI, 0.5);
+
+    public static ComplexNumber ErrorFunction(ComplexNumber z)
+    {
+        if(z.Abs()<=2.3)
+        {
+            ComplexNumber result = 0;
+            ComplexNumber currentTerm = z;
+            for(int i=0;i<20;i++)
+            {
+                result += currentTerm / (2 * i + 1);
+                currentTerm *= -z * z / (i + 1);
+            }
+            return 2*result/sqrtPi;
+        }
+        else if(z.real >= 0)
+        {
+            return 1 - (Exp(-z * z) * (1 - 1 / (2 * z * z)) / (z * sqrtPi));
+        }
+        return -ErrorFunction(-z);
     }
 
 }
@@ -1053,6 +1071,26 @@ public class Sign : ComplexFunction
             return 0;
         }
         return ComplexNumber.Exp(ComplexNumber.I * value.Arg());
+    }
+
+    public override bool Defined(ComplexNumber z)
+    {
+        return function.Defined(z);
+    }
+}
+
+public class Erf : ComplexFunction
+{
+    readonly ComplexFunction function;
+
+    public Erf(ComplexFunction function)
+    {
+        this.function = function;
+    }
+
+    public override ComplexNumber Calculate(ComplexNumber z)
+    {
+        return ComplexNumber.ErrorFunction(function.Calculate(z));
     }
 
     public override bool Defined(ComplexNumber z)

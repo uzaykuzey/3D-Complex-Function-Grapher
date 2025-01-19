@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime;
+using System;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class Plotting : MonoBehaviour
     public static Plotting Instance { get; private set; }
 
     public static int firstInputLength;
+
+    
     public bool ErrorScreen
     {
         get
@@ -50,6 +53,7 @@ public class Plotting : MonoBehaviour
     private Cube[] cubes;
     public ComplexFunction function;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,16 +62,36 @@ public class Plotting : MonoBehaviour
         inputField.textComponent.richText = false;
         inputField.onValueChanged.AddListener((text) =>
         {
-            inputField.text = Regex.Replace(text.ToLower(), @"\s+|\$w|pow|w", match =>
-            {
-                switch (match.Value)
-                {
-                    case "pow": return "pow";
-                    case "$w": return "$w";
-                    case "w": return "W";
-                    default: return " ";
-                }
-            });
+            text = Regex.Replace(
+                    text.ToLower(),
+                    @"(\s+|\$w|pow|w|sign|sin|si|im|re)",
+                    match =>
+                    {
+                        switch (match.Value)
+                        {
+                            case "$w":
+                                return "$w";
+                            case "pow":
+                                return "pow";
+                            case "w":
+                                return "W";
+                            case "sign":
+                                return "sign";
+                            case "sin":
+                                return "sin";
+                            case "si":
+                                return "Si";
+                            case "im":
+                                return "Im";
+                            case "re":
+                                return "Re";
+                            default:
+                                return " ";
+                        }
+                    });
+
+
+            inputField.text = text;
         });
 
         plottingButton.onClick.AddListener(() =>
@@ -116,6 +140,7 @@ public class Plotting : MonoBehaviour
 
     public void Plot(string input)
     {
+
         input = Regex.Replace(input.ToLower().Trim(), @"\s+", " ");
         firstInputLength=-1;
         inputField.text = input;
@@ -133,20 +158,20 @@ public class Plotting : MonoBehaviour
             var tree = parser.add_expr();
             FunctionBuilderVisitor visitor = new FunctionBuilderVisitor();
             function = 5 * visitor.Visit(tree);
+
+            if (firstInputLength != input.Replace(" ", "").Length)
+            {
+                ErrorScreen = true;
+                return;
+            }
+
+            PlotAll();
         }
         catch
         {
             ErrorScreen = true;
             return;
         }
-
-        if(firstInputLength!=input.Replace(" ", "").Length)
-        {
-            ErrorScreen = true;
-            return;
-        }
-
-        PlotAll();
     }
 
     void PlotAll()
