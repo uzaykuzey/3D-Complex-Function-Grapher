@@ -7,6 +7,8 @@ public class HelpControl : MonoBehaviour
     [SerializeField] private List<GameObject> contents;
     [SerializeField] private List<Pair<List<Button>, GameObject>> dict;
     [SerializeField] private List<Pair<Button, string>> functionButtons;
+    [SerializeField] private Button samuel;
+    [SerializeField] private Button linkedIn;
 
     private Plotting plotting;
 
@@ -30,6 +32,16 @@ public class HelpControl : MonoBehaviour
                 plotting.Plot(p.Second);
             });
         }
+
+        samuel.onClick.AddListener(() =>
+        {
+            Application.OpenURL("https://samuelj.li/complex-function-plotter/#z");
+        });
+
+        linkedIn.onClick.AddListener(() =>
+        {
+            Application.OpenURL("https://www.linkedin.com/in/ata-uzay-kuzey/");
+        });
     }
 
     public void ViewScreen(GameObject screen)
@@ -57,12 +69,21 @@ public class HelpControl : MonoBehaviour
             {
                 o.transform.localPosition = o.transform.localPosition - new Vector3(0, y, 0);
             }
-            if(y>680)
+            int c = o.name.Contains("1") ? 680 : 2000;
+            if(y> c)
             {
-                o.transform.localPosition = o.transform.localPosition - new Vector3(0, y - 640, 0);
+                o.transform.localPosition = o.transform.localPosition - new Vector3(0, y - c + 40, 0);
             }
         }
         
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            ViewScreen(null);
+        }
     }
 
     public bool HasOpenScreen()

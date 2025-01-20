@@ -64,13 +64,19 @@ public class Plotting : MonoBehaviour
         {
             text = Regex.Replace(
                     text.ToLower(),
-                    @"(\s+|\$w|pow|w|sign|sin|si|im|re)",
+                    @"(\s+|\$w|\$s|\$i|\$r|pow|w|sign|sin|si|im|re)",
                     match =>
                     {
                         switch (match.Value)
                         {
                             case "$w":
                                 return "$w";
+                            case "$s":
+                                return "$s";
+                            case "$i":
+                                return "$i";
+                            case "$r":
+                                return "$r";
                             case "pow":
                                 return "pow";
                             case "w":
