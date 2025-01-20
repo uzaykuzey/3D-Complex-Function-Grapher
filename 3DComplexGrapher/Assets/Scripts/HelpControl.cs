@@ -9,6 +9,7 @@ public class HelpControl : MonoBehaviour
     [SerializeField] private List<Pair<Button, string>> functionButtons;
     [SerializeField] private Button samuel;
     [SerializeField] private Button linkedIn;
+    [SerializeField] private Button github;
 
     private Plotting plotting;
 
@@ -41,6 +42,11 @@ public class HelpControl : MonoBehaviour
         linkedIn.onClick.AddListener(() =>
         {
             Application.OpenURL("https://www.linkedin.com/in/ata-uzay-kuzey/");
+        });
+
+        github.onClick.AddListener(() =>
+        {
+            Application.OpenURL("https://github.com/uzaykuzey/3D-Complex-Function-Grapher");
         });
     }
 
