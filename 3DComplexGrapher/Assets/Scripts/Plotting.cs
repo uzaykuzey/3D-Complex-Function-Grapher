@@ -13,10 +13,16 @@ public class Plotting : MonoBehaviour
     [SerializeField] private int sqrtCubeCount;
     [SerializeField] private double adjustmentAmount;
     [SerializeField] private GameObject invalidExpression;
+    [SerializeField] private GameObject axisCanvas;
+    [SerializeField] private Button centerButton;
+    [SerializeField] private GameObject centerCanvas;
+    [SerializeField] private TMP_InputField centerField;
 
     public static Plotting Instance { get; private set; }
 
     public static int firstInputLength;
+
+    public static ComplexNumber center;
 
     
     public bool ErrorScreen
@@ -62,7 +68,54 @@ public class Plotting : MonoBehaviour
         inputField.textComponent.richText = false;
         inputField.onValueChanged.AddListener((text) =>
         {
-            text = Regex.Replace(
+            inputField.text = InputConversion(text);
+        });
+
+        centerField.onValueChanged.AddListener((text) => 
+        { 
+            centerField.text = InputConversion(text); 
+        });
+
+        centerField.text = "0";
+        centerCanvas.SetActive(false);
+
+        centerButton.onClick.AddListener(() =>
+        {
+            centerCanvas.SetActive(!centerCanvas.activeSelf);
+        });
+
+
+        plottingButton.onClick.AddListener(() =>
+        {
+            Plot(inputField.text);
+        });
+
+        cubes = new Cube[sqrtCubeCount*sqrtCubeCount];
+
+        foreach(GameObject o in GameObject.FindGameObjectsWithTag("Axis"))
+        {
+            if(o.TryGetComponent(out MeshRenderer renderer))
+            {
+                renderer.material.color = Color.black;
+            }
+        }
+
+        for(int i=-sqrtCubeCount/2; i < sqrtCubeCount/2; i++)
+        {
+            for(int j=-sqrtCubeCount/2;j<sqrtCubeCount/2;j++)
+            {
+                GameObject newCube=Instantiate(originalCube);
+                newCube.transform.position = new Vector3(i, 0, j);
+                newCube.GetComponent<Cube>().SideLength = 1;
+                newCube.GetComponent<Cube>().Coordinates = new ComplexNumber(i, j);
+                cubes[(i + sqrtCubeCount / 2) * sqrtCubeCount + (j + sqrtCubeCount / 2)] = newCube.GetComponent<Cube>();
+            }
+        }
+    }
+
+    private string InputConversion(string text)
+    {
+        text = Regex.Replace(
                     text.ToLower(),
                     @"(\s+|\$w|\$s|\$i|\$r|pow|w|sign|sin|si|im|re)",
                     match =>
@@ -95,43 +148,13 @@ public class Plotting : MonoBehaviour
                                 return " ";
                         }
                     });
-
-
-            inputField.text = text;
-        });
-
-        plottingButton.onClick.AddListener(() =>
-        {
-            Plot(inputField.text);
-        });
-
-        cubes = new Cube[sqrtCubeCount*sqrtCubeCount];
-
-        foreach(GameObject o in GameObject.FindGameObjectsWithTag("Axis"))
-        {
-            if(o.TryGetComponent(out MeshRenderer renderer))
-            {
-                renderer.material.color = Color.black;
-            }
-        }
-
-        for(int i=-sqrtCubeCount/2; i < sqrtCubeCount/2; i++)
-        {
-            for(int j=-sqrtCubeCount/2;j<sqrtCubeCount/2;j++)
-            {
-                GameObject newCube=Instantiate(originalCube);
-                newCube.transform.position = new Vector3(i, 0, j);
-                newCube.GetComponent<Cube>().SideLength = 1;
-                newCube.GetComponent<Cube>().Coordinates = new ComplexNumber(i, j);
-                cubes[(i + sqrtCubeCount / 2) * sqrtCubeCount + (j + sqrtCubeCount / 2)] = newCube.GetComponent<Cube>();
-            }
-        }
+        return text;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(UnityEngine.Input.GetKeyDown(KeyCode.Return)) 
+        if(Input.GetKeyDown(KeyCode.Return)) 
         {
             if(ErrorScreen)
             {
@@ -144,12 +167,30 @@ public class Plotting : MonoBehaviour
         }
     }
 
-    public void Plot(string input)
+    public void DetermineCenter(string input)
     {
+        try
+        {
+            input = input == "" ? "0": input;
+            ComplexFunction centerFunction = ParseInput(input);
+            if(!centerFunction.IsComplexConstant() || !centerFunction.Defined(0))
+            {
+                throw new Exception("Center is not complex constant");
+            }
+            center = -centerFunction.Calculate(0);
+            axisCanvas.SetActive(center.Abs()<=7);
+            axisCanvas.transform.position = new Vector3((float) (adjustmentAmount * center.real), axisCanvas.transform.position.y, (float) (adjustmentAmount * center.imaginary) + 6.1922f);
+        }
+        catch(Exception e)
+        {
+            throw e;
+        }
+    }
 
+    public ComplexFunction ParseInput(string input)
+    {
         input = Regex.Replace(input.ToLower().Trim(), @"\s+", " ");
-        firstInputLength=-1;
-        inputField.text = input;
+        firstInputLength = -1;
         var lexer = new MathLexer(new AntlrInputStream(input));
         var tokens = new CommonTokenStream(lexer);
         var parser = new MathParser(tokens);
@@ -163,20 +204,35 @@ public class Plotting : MonoBehaviour
         {
             var tree = parser.add_expr();
             FunctionBuilderVisitor visitor = new FunctionBuilderVisitor();
-            function = 5 * visitor.Visit(tree);
+            ComplexFunction f = visitor.Visit(tree);
 
             if (firstInputLength != input.Replace(" ", "").Length)
             {
                 ErrorScreen = true;
-                return;
+                throw new Exception("Invalid function");
             }
 
+            return f;
+        }
+        catch
+        {
+            ErrorScreen = true;
+            throw new Exception("Invalid function");
+        }
+    }
+
+    public void Plot(string input)
+    {
+        try
+        {
+            inputField.text = input;
+            DetermineCenter(centerField.text);
+            function = 5 * ParseInput(input);
             PlotAll();
         }
         catch
         {
             ErrorScreen = true;
-            return;
         }
     }
 

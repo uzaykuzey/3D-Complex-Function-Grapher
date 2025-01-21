@@ -303,6 +303,7 @@ public abstract class ComplexFunction
 {
     public abstract ComplexNumber Calculate(ComplexNumber z);
     public abstract bool Defined(ComplexNumber z);
+    public abstract bool IsComplexConstant();
 
     public static implicit operator ComplexFunction(ComplexNumber value)
     {
@@ -372,6 +373,10 @@ public class Constant : ComplexFunction
         return true;
     }
 
+    public override bool IsComplexConstant()
+    {
+        return true;
+    }
 }
 
 public enum VariableTypes
@@ -389,6 +394,7 @@ public class Variable : ComplexFunction
     }
     public override ComplexNumber Calculate(ComplexNumber z)
     {
+        z = z - Plotting.center;
         switch (type)
         {
             case VariableTypes.X:
@@ -403,6 +409,11 @@ public class Variable : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return true;
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return false;
     }
 }
 
@@ -426,6 +437,11 @@ public class Addition : ComplexFunction
     {
         return function1.Defined(z) && function2.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function1.IsComplexConstant() && function2.IsComplexConstant();
+    }
 }
 
 public class Substraction : ComplexFunction
@@ -447,6 +463,11 @@ public class Substraction : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function1.Defined(z) && function2.Defined(z);
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function1.IsComplexConstant() && function2.IsComplexConstant();
     }
 }
 
@@ -470,6 +491,11 @@ public class Multiplication : ComplexFunction
     {
         return function1.Defined(z) && function2.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function1.IsComplexConstant() && function2.IsComplexConstant();
+    }
 }
 
 public class Division : ComplexFunction
@@ -492,6 +518,11 @@ public class Division : ComplexFunction
     {
         return function1.Defined(z) && function2.Defined(z) && function2.Calculate(z) != 0;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function1.IsComplexConstant() && function2.IsComplexConstant();
+    }
 }
 
 public class Re : ComplexFunction
@@ -511,6 +542,11 @@ public class Re : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z);
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -532,6 +568,10 @@ public class Im : ComplexFunction
     {
         return function.Defined(z);
     }
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Arg : ComplexFunction
@@ -552,6 +592,11 @@ public class Arg : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Abs : ComplexFunction
@@ -571,6 +616,11 @@ public class Abs : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z);
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -596,6 +646,11 @@ public class Sqrt : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Cbrt : ComplexFunction
@@ -620,6 +675,11 @@ public class Cbrt : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Sine : ComplexFunction
@@ -640,6 +700,11 @@ public class Sine : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Cosine : ComplexFunction
@@ -659,6 +724,11 @@ public class Cosine : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z);
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -681,6 +751,11 @@ public class Tangent : ComplexFunction
     {
         return function.Defined(z) && ComplexNumber.Cos(function.Calculate(z)) != 0;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Cotangent : ComplexFunction
@@ -702,6 +777,11 @@ public class Cotangent : ComplexFunction
     {
         return function.Defined(z) && ComplexNumber.Sin(function.Calculate(z)) != 0;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Exponential : ComplexFunction
@@ -722,6 +802,11 @@ public class Exponential : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class NaturalLogarithm : ComplexFunction
@@ -741,6 +826,11 @@ public class NaturalLogarithm : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z) && function.Calculate(z) != 0;
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -764,6 +854,11 @@ public class Power : ComplexFunction
     {
         return function1.Defined(z) && function2.Defined(z) && function1.Calculate(z) != 0;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function1.IsComplexConstant() && function2.IsComplexConstant();
+    }
 }
 
 public class Arcsine : ComplexFunction
@@ -783,6 +878,11 @@ public class Arcsine : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z);
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -804,6 +904,11 @@ public class Arctangent : ComplexFunction
     {
         return function.Defined(z) && function.Calculate(z) != ComplexNumber.I && function.Calculate(z) != -ComplexNumber.I;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Arccotangent : ComplexFunction
@@ -823,6 +928,11 @@ public class Arccotangent : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z) && function.Calculate(z) != ComplexNumber.I && function.Calculate(z) != -ComplexNumber.I;
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -850,6 +960,11 @@ public class Gamma : ComplexFunction
         ComplexNumber value=function.Calculate(z);
         return !(value.real<0.1 && Math.Abs(value.real - Math.Round(value.real))<0.0001 && Math.Abs(value.imaginary) < 0.0001);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class SineIntegral : ComplexFunction
@@ -870,6 +985,11 @@ public class SineIntegral : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class RiemannZeta : ComplexFunction
@@ -889,6 +1009,11 @@ public class RiemannZeta : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z) && function.Calculate(z) != 1;
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
 
@@ -919,6 +1044,11 @@ public class Beta : ComplexFunction
         return !(value1.real < 0.1 && Math.Abs(value1.real - Math.Round(value1.real)) < 0.0001 && Math.Abs(value1.imaginary) < 0.0001) &&
                     !(value2.real < 0.1 && Math.Abs(value2.real - Math.Round(value2.real)) < 0.0001 && Math.Abs(value2.imaginary) < 0.0001);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function1.IsComplexConstant() && function2.IsComplexConstant();
+    }
 }
 
 
@@ -941,6 +1071,11 @@ public class IterativeVariable : ComplexFunction
     }
 
     public override bool Defined(ComplexNumber z)
+    {
+        return true;
+    }
+
+    public override bool IsComplexConstant()
     {
         return true;
     }
@@ -985,6 +1120,11 @@ public class Product : ComplexFunction
         IterativeVariable.iterativeValues.Remove(name);
         return true;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return rule.IsComplexConstant();
+    }
 }
 
 public class Sum : ComplexFunction
@@ -1026,6 +1166,11 @@ public class Sum : ComplexFunction
         IterativeVariable.iterativeValues.Remove(name);
         return true;
     }
+
+    public override bool IsComplexConstant()
+    {
+        return rule.IsComplexConstant();
+    }
 }
 
 public class LambertW : ComplexFunction
@@ -1052,6 +1197,11 @@ public class LambertW : ComplexFunction
         
         return value.real > -1 / Math.E || (Math.Abs(value.Arg()-Math.PI)>0.01 && Math.Abs(value.Arg() + Math.PI) > 0.01);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Sign : ComplexFunction
@@ -1077,6 +1227,11 @@ public class Sign : ComplexFunction
     {
         return function.Defined(z);
     }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
+    }
 }
 
 public class Erf : ComplexFunction
@@ -1096,5 +1251,10 @@ public class Erf : ComplexFunction
     public override bool Defined(ComplexNumber z)
     {
         return function.Defined(z);
+    }
+
+    public override bool IsComplexConstant()
+    {
+        return function.IsComplexConstant();
     }
 }
