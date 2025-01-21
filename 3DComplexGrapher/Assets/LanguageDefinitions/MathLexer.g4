@@ -44,7 +44,7 @@ I: 'i';
 APERY: 'apery';
 EULERMASCHERONI: 'eulerm';
 INTEGER: DIGIT+;
-RATIONAL: DIGIT+ '.' DIGIT*;
+RATIONAL: DIGIT+ '.' DIGIT* | DIGIT* '.' DIGIT+;
 ITERATIVE_VARIABLE: '$' [a-z];
 
 LP: '(';

@@ -841,7 +841,7 @@ MonoBehaviour:
     Re | Im | Real | Imag | gamma | \t\t\t\tzeta | W | lambertW | erf | arg | Si
     | sign | \t\t\t\tsinh | cosh | tanh\r\n\r\n<constant> ::= <integer> | <rational>
     | i | e | pi | phi | \n\t\t\tapery | eulerm\r\n\r\n<integer> ::= <digit> | <integer>
-    <digit>\r\n\r\n<rational> ::= <integer> . | <integer> . <integer>\r\n\r\n<digit>
+    <digit>\r\n\r\n<rational> ::= <integer> . | <integer> . <integer>\r | . <integer>\n\r\n<digit>
     ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9\r\n\r\n<variable> ::= x | y | z | <iterable_variable>\r\n\r\n<iterable_variable>
     ::= $ <letter>\r\n\r\n<letter> ::= a | b | c | d | e | f | g | h | i | j | k
     | l | m | n | o | p | q | \n\t\tr | s | t | u | v | w | x | y | z \r\n\r\n<sum_or_product>
